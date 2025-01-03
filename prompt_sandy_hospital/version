@@ -1,2 +1,4 @@
-1.0.0
- - No changes yet
+1.0.1
+ (not critical update, if you don't want to update them map, put "version" to be 1.0.1 in fxmanifest)
+ - Ytyp was changed (now beds and tables are selectable by scripts)
+ - Change readme file
