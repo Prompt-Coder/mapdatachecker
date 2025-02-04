@@ -1,4 +1,4 @@
-1.0.2
- - Removed ox_lib from dependencies (moved to the client.lua)
- - Added script to spawn entity sets and Ipls (use /cityhall)
- - Other small script fixes and checks
+1.1.0
+ - Added new client/open.lua file so user can use their own ui system to manage elevator ui
+ - entity sets reload correctly now (use /cityhall inside the interior)
+ - conference room chairs now static and do not spawn peds on them
