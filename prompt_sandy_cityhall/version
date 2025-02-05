@@ -1,4 +1,3 @@
-1.1.0
- - Added new client/open.lua file so user can use their own ui system to manage elevator ui
- - entity sets reload correctly now (use /cityhall inside the interior)
- - conference room chairs now static and do not spawn peds on them
+1.1.1
+ - !!IMPORTANT UPDATE!!
+ - Fixed Game-Crashing Mistake in FXManifest (data mounter failed)
