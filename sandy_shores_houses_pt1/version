@@ -1,4 +1,5 @@
-2.0.0
- - Added 10 Houses
- - Read new documentation: https://prompt-studio.gitbook.io/prompt-studio/sandy-maps/sandy-houses
+2.0.1
+ - Collision fixes
+ - Added emissive reflections from rain in the night (look soo cool)
+ - Improved timecycles inside interiors
 
