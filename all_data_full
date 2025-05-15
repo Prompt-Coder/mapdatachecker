@@ -1,0 +1,54 @@
+local sandyResources = {
+  {
+    static = "prompt_sandy_gasstation_carwash",
+    name = "Gas Station & Car Wash"
+  },
+  {
+    static = "prompt_sandy_compound",
+    name = "Mechanic"
+  },
+  {
+    static = "prompt_sandy_church",
+    name = "Church"
+  },
+  {
+    static = "prompt_sandy_classic_car_dealership",
+    name = "Car Dealership"
+  },
+  {
+    static = "prompt_sandy_cityhall",
+    name = "City Hall"
+  },
+  {
+    static = "sandy_shores_houses_pt1",
+    name = "Houses Part 1"
+  },
+  {
+    static = "prompt_sandy_train_station",
+    name = "Train Station"
+  },
+  {
+    static = "prompt_sandy_beaches",
+    name = "Marina"
+  },
+  {
+    static = "cfx_chuz_sandy_shores_boat_house",
+    name = "Boathouse"
+  },
+  {
+    static = "prompt_sandy_sheriff",
+    name = "Sheriff"
+  },
+  {
+    static = "prompt_sandy_hospital",
+    name = "Hospital"
+  },
+  {
+    static = "prompt_sandy_airfield",
+    name = "Airfield"
+  },
+  {
+    static = "cfx_prompt_sandy_shores_fire_department",
+    name = "Fire Station"
+  }
+}
