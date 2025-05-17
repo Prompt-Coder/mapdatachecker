@@ -5,7 +5,7 @@ return {
   },
   {
     name = "mechanic",
-    static = "prompt_sandy_compound"
+    static = "prompt_sandy_mechanic"
   },
   {
     name = "church",
