@@ -1,54 +1,54 @@
-local sandyResources = {
+return {
   {
-    static = "prompt_sandy_gasstation_carwash",
-    name = "gas"
+    name = "gas",
+    static = "prompt_sandy_gasstation_carwash"
   },
   {
-    static = "prompt_sandy_compound",
-    name = "mechanic"
+    name = "mechanic",
+    static = "prompt_sandy_compound"
   },
   {
-    static = "prompt_sandy_church",
-    name = "church"
+    name = "church",
+    static = "prompt_sandy_church"
   },
   {
-    static = "prompt_sandy_classic_car_dealership",
-    name = "dealer"
+    name = "dealer",
+    static = "prompt_sandy_classic_car_dealership"
   },
   {
-    static = "prompt_sandy_cityhall",
-    name = "cityhall"
+    name = "cityhall",
+    static = "prompt_sandy_cityhall"
   },
   {
-    static = "sandy_shores_houses_pt1",
-    name = "houses1"
+    name = "houses1",
+    static = "sandy_shores_houses_pt1"
   },
   {
-    static = "prompt_sandy_train_station",
-    name = "trainstation"
+    name = "trainstation",
+    static = "prompt_sandy_train_station"
   },
   {
-    static = "prompt_sandy_beaches",
-    name = "marina"
+    name = "marina",
+    static = "prompt_sandy_beaches"
   },
   {
-    static = "cfx_chuz_sandy_shores_boat_house",
-    name = "boathouse"
+    name = "boathouse",
+    static = "cfx_chuz_sandy_shores_boat_house"
   },
   {
-    static = "prompt_sandy_sheriff",
-    name = "sheriff"
+    name = "sheriff",
+    static = "prompt_sandy_sheriff"
   },
   {
-    static = "prompt_sandy_hospital",
-    name = "hospital"
+    name = "hospital",
+    static = "prompt_sandy_hospital"
   },
   {
-    static = "prompt_sandy_airfield",
-    name = "airfield"
+    name = "airfield",
+    static = "prompt_sandy_airfield"
   },
   {
-    static = "cfx_prompt_sandy_shores_fire_department",
-    name = "firestation"
+    name = "firestation",
+    static = "cfx_prompt_sandy_shores_fire_department"
   }
 }
