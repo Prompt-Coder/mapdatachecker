@@ -5,6 +5,8 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/tree/SandyMap
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
+print("Script version: 1")
+
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
 CreateThread(function()
@@ -345,6 +347,7 @@ CreateThread(function()
     else 
         -- Legacy Final Map support 
         local finalMapName = existList[#existList].. ":mapFinal"
+        print(finalMapName)
         TriggerEvent(finalMapName, allMaps, existList)
     end
 end)
