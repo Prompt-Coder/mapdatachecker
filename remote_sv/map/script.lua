@@ -20,6 +20,7 @@ end)
 -- Getting all maps possible
 local allMaps = {}
 local mapNames = {}
+local existList = {}
 PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
@@ -57,7 +58,18 @@ RegisterNetEvent(legacyEvents.exists, function(cb)
 end)
 
 RegisterNetEvent(legacyEvents.fullName, function(returnEvent, id)
-    local fullName = mapNames[id+1]
+    local fullName = ""
+    local nameStatic = existList[id]
+    local mapId = 1
+
+    for i = 1, #allMaps do
+        if allMaps[i] == nameStatic then
+            mapId = i
+            break
+        end
+    end
+
+    fullName = mapNames[mapId]
     TriggerEvent(returnEvent, fullName, id)
 end)
 
@@ -77,7 +89,6 @@ end)
 
 -- check Installed Maps logic
 CreateThread(function()
-    local existList = {}
     Wait(1000)
 
     -- Checking for all maps that exists out of all maps
