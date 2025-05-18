@@ -20,7 +20,7 @@ end)
 -- Getting all maps possible
 local allMaps = {}
 local mapNames = {}
-local existList = {}
+local myName = ""
 PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
@@ -32,6 +32,10 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
             for i = 1, #mapTable do 
                 table.insert(allMaps, mapTable[i].static)
                 table.insert(mapNames, mapTable[i].name)
+
+                if allMaps[i] == MapId then
+                    myName = mapTable[i].name
+                end
             end
 
             if Debug == true then 
@@ -58,18 +62,7 @@ RegisterNetEvent(legacyEvents.exists, function(cb)
 end)
 
 RegisterNetEvent(legacyEvents.fullName, function(returnEvent, id)
-    local fullName = ""
-    local nameStatic = existList[id]
-    local mapId = 1
-
-    for i = 1, #allMaps do
-        if allMaps[i] == nameStatic then
-            mapId = i
-            break
-        end
-    end
-
-    fullName = mapNames[mapId]
+    local fullName = myName
     TriggerEvent(returnEvent, fullName, id)
 end)
 
@@ -89,6 +82,7 @@ end)
 
 -- check Installed Maps logic
 CreateThread(function()
+    local existList = {}
     Wait(1000)
 
     -- Checking for all maps that exists out of all maps
@@ -143,7 +137,9 @@ CreateThread(function()
             Wait(100)
 
             if legacyExists == true then
-                print("Found legacy map: ", allMaps[i])
+                if Debug == true then 
+                    print("Found legacy map: ", allMaps[i])
+                end
                 table.insert(existList, allMaps[i])
                 table.insert(legacyMaps, allMaps[i])
             end
