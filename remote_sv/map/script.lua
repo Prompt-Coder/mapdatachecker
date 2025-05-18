@@ -56,7 +56,7 @@ RegisterNetEvent(legacyEvents.exists, function(cb)
     cb(true)
 end)
 
-RegisterNetEvent(legacyEvents.fullName, function(id)
+RegisterNetEvent(legacyEvents.fullName, function(returnEvent, id)
     local fullName = ""
     for i = 1, #allMaps do
         if allMaps[i] == id then
@@ -65,7 +65,7 @@ RegisterNetEvent(legacyEvents.fullName, function(id)
         end
     end
 
-    TriggerEvent(legacyEvents.fullName, fullName, id)
+    TriggerEvent(returnEvent, fullName, id)
 end)
 
 RegisterNetEvent(legacyEvents.final, function()
