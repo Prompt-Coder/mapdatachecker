@@ -1,54 +1,54 @@
 return {
   {
-    name = "gas",
+    name = "Gas",
     static = "prompt_sandy_gasstation_carwash"
   },
   {
-    name = "mechanic",
+    name = "Mechanic",
     static = "prompt_sandy_compound"
   },
   {
-    name = "church",
+    name = "Church",
     static = "prompt_sandy_church"
   },
   {
-    name = "dealer",
+    name = "Dealer",
     static = "prompt_sandy_classic_car_dealership"
   },
   {
-    name = "cityhall",
+    name = "Cityhall",
     static = "prompt_sandy_cityhall"
   },
   {
-    name = "houses1",
+    name = "Houses1",
     static = "sandy_shores_houses_pt1"
   },
   {
-    name = "trainstation",
+    name = "Trainstation",
     static = "prompt_sandy_train_station"
   },
   {
-    name = "marina",
+    name = "Marina",
     static = "prompt_sandy_beaches"
   },
   {
-    name = "boathouse",
+    name = "Boathouse",
     static = "cfx_chuz_sandy_shores_boat_house"
   },
   {
-    name = "sheriff",
+    name = "Sheriff",
     static = "prompt_sandy_sheriff"
   },
   {
-    name = "hospital",
+    name = "Hospital",
     static = "prompt_sandy_hospital"
   },
   {
-    name = "airfield",
+    name = "Airfield",
     static = "prompt_sandy_airfield"
   },
   {
-    name = "firestation",
+    name = "Firestation",
     static = "cfx_prompt_sandy_shores_fire_department"
   }
 }
