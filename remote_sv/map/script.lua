@@ -169,26 +169,26 @@ CreateThread(function()
         return result
     end
 
-    if #legacyMaps > 0 then
-        local boxLines = {
-            "⚠️ ^3 Support for legacy script version found the following maps:^7"
-        }
+    -- if #legacyMaps > 0 then
+    --     local boxLines = {
+    --         "⚠️ ^3 Support for legacy script version found the following maps:^7"
+    --     }
         
-        for i = 1, #legacyMaps do
-            table.insert(boxLines, "^3 - " .. legacyMaps[i] .. "^7")
-        end
+    --     for i = 1, #legacyMaps do
+    --         table.insert(boxLines, "^3 - " .. legacyMaps[i] .. "^7")
+    --     end
         
-        table.insert(boxLines, "^3 Legacy maps will work, but consider downloading the new version^7")
+    --     table.insert(boxLines, "^3 Legacy maps will work, but consider downloading the new version^7")
         
-        local box = CreateBox(boxLines)
-        for _, line in ipairs(box) do
-            print(line)
-        end
-    else 
-        if Debug == true then 
-            print("Found no legacy maps, continuing...")
-        end
-    end
+    --     local box = CreateBox(boxLines)
+    --     for _, line in ipairs(box) do
+    --         print(line)
+    --     end
+    -- else 
+    --     if Debug == true then 
+    --         print("Found no legacy maps, continuing...")
+    --     end
+    -- end
 
     -- Making a link for Mapdata in case it does not fit
     -- Example: name1+name2+name3 (using names instead of static IDs)
