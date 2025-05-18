@@ -57,7 +57,7 @@ RegisterNetEvent(legacyEvents.exists, function(cb)
 end)
 
 RegisterNetEvent(legacyEvents.fullName, function(returnEvent, id)
-    local fullName = mapNames[id]
+    local fullName = mapNames[id+1]
     TriggerEvent(returnEvent, fullName, id)
 end)
 
