@@ -57,6 +57,7 @@ RegisterNetEvent(legacyEvents.exists, function(cb)
 end)
 
 RegisterNetEvent(legacyEvents.fullName, function(returnEvent, id)
+    print(id)
     local fullName = ""
     for i = 1, #allMaps do
         if allMaps[i] == id then
