@@ -83,7 +83,7 @@ end)
 -- check Installed Maps logic
 CreateThread(function()
     local existList = {}
-    Wait(1000)
+    Wait(5000)
 
     -- Checking for all maps that exists out of all maps
     -- Calling i exist event to check if it is installed
@@ -345,7 +345,6 @@ CreateThread(function()
     else 
         -- Legacy Final Map support 
         local finalMapName = existList[#existList].. ":mapFinal"
-        Wait(5000)
         TriggerEvent(finalMapName, allMaps, existList)
     end
 end)
