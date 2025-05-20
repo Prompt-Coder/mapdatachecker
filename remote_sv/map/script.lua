@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/tree/SandyMap
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 1")
+print("Script version: 2")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -95,56 +95,26 @@ CreateThread(function()
 
     -- Getting all maps that are installed (exist)
     for i = 1, #allMaps do
-        local checkName = "promptmap:i_exist_" .. allMaps[i]
-        local exists = false
         if Debug == true then
             print("Checking for ".. allMaps[i])
         end
 
-        -- Calling the event to check if it is installed and started
-        TriggerEvent(checkName, function(existsCB)
-            exists = existsCB
+        -- Calling the legacy event to check if map is installed
+        local legacyCheckName = allMaps[i].. ":mapExists"
+        local legacyExists = false
+
+        TriggerEvent(legacyCheckName, function(existsCB)
+            legacyExists = existsCB
         end)
+
         Wait(100)
 
         if Debug == true then
-            print("Exists: ", exists)
+            print("Exists: ", legacyExists)
         end
 
-        if exists == true then 
+        if legacyExists == true then 
             table.insert(existList, allMaps[i])
-        end
-    end
-
-    -- Check for legacy maps using static:mapExists event
-    local legacyMaps = {}
-    for i = 1, #allMaps do
-        -- Skip if already in existList
-        local alreadyExists = false
-        for j = 1, #existList do
-            if allMaps[i] == existList[j] then
-                alreadyExists = true
-                break
-            end
-        end
-
-        if not alreadyExists then
-            -- Try legacy event
-            local legacyCheckName = allMaps[i] .. ":mapExists"
-            local legacyExists = false
-            
-            TriggerEvent(legacyCheckName, function(existsCB)
-                legacyExists = existsCB
-            end)
-            Wait(100)
-
-            if legacyExists == true then
-                if Debug == true then 
-                    print("Found legacy map: ", allMaps[i])
-                end
-                table.insert(existList, allMaps[i])
-                table.insert(legacyMaps, allMaps[i])
-            end
         end
     end
 
@@ -234,9 +204,29 @@ CreateThread(function()
     -- Function to check if mapdata matches installed maps and print results
     local function checkMapdataMatch(mapdataMaps, existList, link)
         local same = true
+        -- sort copy of both tables
+        local tempMapdataMaps = {}
+        local tempExistList = {}
+
         for i = 1, #mapdataMaps do
-            if existList[i] == nil or existList[i] ~= mapdataMaps[i] then
+            table.insert(tempMapdataMaps, mapdataMaps[i])
+        end
+
+        for i = 1, #existList do
+            table.insert(tempExistList, existList[i])
+        end
+
+        table.sort(tempMapdataMaps)
+        table.sort(tempExistList)
+
+        if #tempMapdataMaps ~= #tempExistList then
+            same = false
+        end
+
+        for i = 1, #tempMapdataMaps do
+            if tempMapdataMaps[i] ~= tempExistList[i] then
                 same = false
+                break
             end
         end
         
@@ -311,24 +301,9 @@ CreateThread(function()
                 end
             end
             
-            if foundLegacyMapdata then
+            if foundLegacyMapdata == true then
                 -- Update mapdataMaps with legacy data
                 mapdataMaps = legacyMapdataMaps
-                
-                local boxLines = {
-                    "⚠️ ^3 Support for legacy mapdata found for the following maps:^7"
-                }
-                
-                for i = 1, #legacyMapdataMaps do
-                    table.insert(boxLines, "^3 - " .. legacyMapdataMaps[i] .. "^7")
-                end
-                
-                table.insert(boxLines, "^3 Legacy mapdata will work, but consider downloading the new version^7")
-                
-                local box = CreateBox(boxLines)
-                for _, line in ipairs(box) do
-                    print(line)
-                end
                 
                 -- Check if mapdata matches installed maps
                 checkMapdataMatch(mapdataMaps, existList, link)
@@ -347,7 +322,6 @@ CreateThread(function()
     else 
         -- Legacy Final Map support 
         local finalMapName = existList[#existList].. ":mapFinal"
-        print(finalMapName)
         TriggerEvent(finalMapName, allMaps, existList)
     end
 end)
