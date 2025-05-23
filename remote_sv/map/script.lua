@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/tree/SandyMap
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 2")
+-- print("Script version: 2")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
