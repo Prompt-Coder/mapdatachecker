@@ -1,5 +1,5 @@
-1.0.1
- - Added button in the underground garage to control floor gate
- - Renamed interactions to appear more user-friendly
- - Fix Collisions on the roof
- - Fix Collision in the bathroom
+1.0.2
+ - Fix Collision on the wall
+ - Fix dissapearing wall
+ - Added Occlusion for better optimization
+ - Now uses sv_loader.lua
