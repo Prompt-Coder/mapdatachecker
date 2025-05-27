@@ -1,5 +1,2 @@
-1.0.2
- - Fix Collision on the wall
- - Fix dissapearing wall
- - Added Occlusion for better optimization
- - Now uses sv_loader.lua
+1.0.3
+ - Added open_functions.lua (so you can control who has access to the animations)
