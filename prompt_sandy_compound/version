@@ -1,2 +1,2 @@
-1.0.2
- - The spot where map was going invisible - fixed
+1.0.3
+ - Added open_functions.lua (so you can control who has access to the animations)
