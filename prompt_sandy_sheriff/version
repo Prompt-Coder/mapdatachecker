@@ -1,3 +1,4 @@
-1.2.0
- - BIG OPTIMIZATION FIX (should get much better fps next to the station now)
- - Now uses new sv_loader.lua system for map data check
+1.2.1
+ - NO MORE TRASSPASSING!
+ - Added sharp fence tops
+ - Made wall collision to not be climable
