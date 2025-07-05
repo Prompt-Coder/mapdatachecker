@@ -1,2 +1,4 @@
-1.0.3
- - Added open_functions.lua (so you can control who has access to the animations)
+1.0.4
+ - Decreased size from 99mb to 72mb
+ - Fixed occasional audio streaming crash
+ - Added the choice to choose the interaction button inside open_config.lua
