@@ -190,16 +190,24 @@ CreateThread(function()
     end
 
     local link = string.format(Urls.DownloadUrl, ids)
+    local returned = false
 
     -- Checking if link exists
     PerformHttpRequest(link, function(code, text, headers)
+        local finalUrl = ""
         if code == 200 then
-            link = ("| 🔗 Download: %-56s |"):format(link)
+            finalUrl = link .. ".zip"
         else
-            link = "| 🔗 Download link doesn't exist, please use our platform to generate mapdata:\n"
-            link = link .. string.format(Urls.PlatformUrl, ids) .. ".zip"
+            finalUrl = string.format(Urls.PlatformUrl, ids)
         end
+        link = ("| 🔗 Download: %-56s |"):format(finalUrl)
+
+        returned = true
     end, "GET")
+
+    while returned == false do
+        Wait(100)
+    end
 
     -- Function to check if mapdata matches installed maps and print results
     local function checkMapdataMatch(mapdataMaps, existList, link)
