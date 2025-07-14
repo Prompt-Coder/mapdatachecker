@@ -1,5 +1,9 @@
 return {
   {
+    name = "Market",
+    static = "prompt_sandy_market"
+  },
+  {
     name = "Motel",
     static = "prompt_sandy_motel"
   },
