@@ -13,58 +13,72 @@ return {
   },
   {
     name = "Motel",
-    static = "prompt_sandy_motel"
+    static = "prompt_sandy_motel",
+    tebex = 6930575
   },
   {
     name = "Gas",
-    static = "prompt_sandy_gasstation_carwash"
+    static = "prompt_sandy_gasstation_carwash",
+    tebex = 6704247
   },
   {
     name = "Mechanic",
-    static = "prompt_sandy_compound"
+    static = "prompt_sandy_compound",
+    tebex = 6828353
   },
   {
     name = "Church",
-    static = "prompt_sandy_church"
+    static = "prompt_sandy_church",
+    tebex = 6781028
   },
   {
     name = "Dealer",
-    static = "prompt_sandy_classic_car_dealership"
+    static = "prompt_sandy_classic_car_dealership",
+    tebex = 6725745
   },
   {
     name = "Cityhall",
-    static = "prompt_sandy_cityhall"
+    static = "prompt_sandy_cityhall",
+    tebex = 6578222
   },
   {
     name = "Houses1",
-    static = "sandy_shores_houses_pt1"
+    static = "sandy_shores_houses_pt1",
+    tebex = 6499824
   },
   {
     name = "Trainstation",
-    static = "prompt_sandy_train_station"
+    static = "prompt_sandy_train_station",
+    tebex = 6521797
   },
   {
     name = "Marina",
-    static = "prompt_sandy_beaches"
+    static = "prompt_sandy_beaches",
+    tebex = 6443485
   },
   {
     name = "Boathouse",
-    static = "cfx_chuz_sandy_shores_boat_house"
+    static = "cfx_chuz_sandy_shores_boat_house",
+    tebex = 6276364
   },
   {
     name = "Sheriff",
-    static = "prompt_sandy_sheriff"
+    static = "prompt_sandy_sheriff",
+    tebex = 6308272
   },
   {
     name = "Hospital",
-    static = "prompt_sandy_hospital"
+    static = "prompt_sandy_hospital",
+    tebex = 6381549
   },
   {
     name = "Airfield",
-    static = "prompt_sandy_airfield"
+    static = "prompt_sandy_airfield",
+    tebex = 6254445
   },
   {
     name = "Firestation",
-    static = "cfx_prompt_sandy_shores_fire_department"
+    static = "cfx_prompt_sandy_shores_fire_department",
+    tebex = 5203353
   }
 }
