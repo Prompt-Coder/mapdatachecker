@@ -8,6 +8,10 @@ return {
     static = "prompt_sandy_horneys"
   },
   {
+    name = "Bank",
+    static = "prompt_sandy_bank"
+  },
+  {
     name = "Market",
     static = "prompt_sandy_market"
   },
