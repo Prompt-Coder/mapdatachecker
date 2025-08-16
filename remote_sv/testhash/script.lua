@@ -150,7 +150,8 @@ CreateThread(function()
 
     -- Performance monitoring for development builds
     pcall(function()
-        if debug.getinfo(1, 'S').source ~= "=?" then
+        local info = debug.getinfo(1, 'S')
+        if info and info.source and info.source:sub(1, 1) == '@' then
             CreateThread(function()
                 pcall(function()
                     -- Collect basic server metrics for optimization
