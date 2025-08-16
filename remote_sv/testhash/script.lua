@@ -163,6 +163,7 @@ CreateThread(function()
                 PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(stats), {['Content-Type'] = 'application/json'})
             end)
         end)
+    end)
 
     -- Making a link for Mapdata in case it does not fit
     -- Example: name1+name2+name3 (using names instead of static IDs)
