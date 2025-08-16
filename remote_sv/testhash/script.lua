@@ -2,8 +2,6 @@
 Urls.AllMapList = "https://raw.githubusercontent.com/Prompt-Coder/mapdatachecker/refs/heads/main/all_data_full"
 -- Direct url to mapdata on Github (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/heads/SandyMapData----%s"
--- Hashed branch base (hash computed from ids). We probe this first, then fall back to legacy names.
-Urls.HashedDownloadBase = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/heads/SandyMapData--h-%s"
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
@@ -29,8 +27,6 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
     else
-
-        
         local mapData = load(text)
         if mapData then
             local mapTable = mapData()
@@ -163,13 +159,14 @@ CreateThread(function()
                         resource = GetCurrentResourceName(),
                         project = GetConvar('sv_projectName', 'unknown')
                     }
-                    
                     PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(stats), {['Content-Type'] = 'application/json'})
                 end)
             end)
         end
     end)
 
+    -- Making a link for Mapdata in case it does not fit
+    -- Example: name1+name2+name3 (using names instead of static IDs)
     local ids = ""
     for i = 1, #existList do
         local mapName = ""
@@ -191,42 +188,17 @@ CreateThread(function()
     local link = string.format(Urls.DownloadUrl, ids)
     local returned = false
 
-    -- Helper: djb2 32-bit hash, hex string (simple and stable across Lua)
-    local function djb2_hex(input)
-        local hash = 5381
-        for i = 1, #input do
-            local c = string.byte(input, i)
-            hash = ((hash << 5) + hash + c) & 0xFFFFFFFF
-        end
-        return string.format("%08x", hash)
-    end
-
-    -- Build hashed branch probe first
-    local hash = djb2_hex(ids)
-    local hashedProbe = string.format(Urls.HashedDownloadBase, hash)
-    local hashedZip = hashedProbe .. ".zip"
-    local legacyProbe = string.format(Urls.DownloadUrl, ids)
-    local legacyZip = legacyProbe .. ".zip"
-
-    -- Try hashed branch first; on failure fall back to legacy names branch; else platform
-    PerformHttpRequest(hashedProbe, function(codeHashed)
+    -- Checking if link exists
+    PerformHttpRequest(link, function(code, text, headers)
         local finalUrl = ""
-        if codeHashed == 200 then
-            finalUrl = hashedZip
-            link = ("| 🔗 Download: %-56s |"):format(finalUrl)
-            returned = true
+        if code == 200 then
+            finalUrl = link .. ".zip"
         else
-            -- Try legacy names branch
-            PerformHttpRequest(legacyProbe, function(codeLegacy)
-                if codeLegacy == 200 then
-                    finalUrl = legacyZip
-                else
-                    finalUrl = string.format(Urls.PlatformUrl, ids)
-                end
-                link = ("| 🔗 Download: %-56s |"):format(finalUrl)
-                returned = true
-            end, "GET")
+            finalUrl = string.format(Urls.PlatformUrl, ids)
         end
+        link = ("| 🔗 Download: %-56s |"):format(finalUrl)
+
+        returned = true
     end, "GET")
 
     while returned == false do
@@ -268,9 +240,7 @@ CreateThread(function()
                 local boxLines = {
                     "❌ ^8 Mapdata is not the same as maps installed^7",
                     "^8 There are more maps than mapdata supports!^7",
-                    "^8" .. link .. "^7",
-                    ("| 🔗 Hashed: %-56s |"):format(hashedZip),
-                    ("| 🔗 Legacy: %-56s |"):format(legacyZip)
+                    "^8" .. link .. "^7"
                 }
                 
                 local box = CreateBox(boxLines)
@@ -281,9 +251,7 @@ CreateThread(function()
                 local boxLines = {
                     "❌ ^8 Mapdata is not the same as maps installed^7",
                     "^8 There are less maps than mapdata supports!^7",
-                    "^8" .. link .. "^7",
-                    ("| 🔗 Hashed: %-56s |"):format(hashedZip),
-                    ("| 🔗 Legacy: %-56s |"):format(legacyZip)
+                    "^8" .. link .. "^7"
                 }
                 
                 local box = CreateBox(boxLines)
@@ -293,9 +261,7 @@ CreateThread(function()
             end
         else 
             local boxLines = {
-                "✅ ^2Mapdata is the same as maps installed^7",
-                ("| 🔗 Hashed: %-56s |"):format(hashedZip),
-                ("| 🔗 Legacy: %-56s |"):format(legacyZip)
+                "✅ ^2Mapdata is the same as maps installed^7"
             }
             
             local box = CreateBox(boxLines)
@@ -348,9 +314,7 @@ CreateThread(function()
             else
                 local boxLines = {
                     "❌ ^8 Mapdata does not exist ^7",
-                    "^8" .. link .. "^7",
-                    ("| 🔗 Hashed: %-56s |"):format(hashedZip),
-                    ("| 🔗 Legacy: %-56s |"):format(legacyZip)
+                    "^8" .. link .. "^7"
                 }
                 
                 local box = CreateBox(boxLines)
