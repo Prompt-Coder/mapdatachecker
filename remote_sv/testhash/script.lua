@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 8")
+print("Script version: 9")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -82,24 +82,6 @@ RegisterNetEvent(iExistName, function(existsCB)
     existsCB(true)
 end)
 
--- optimisation metrics
-print("test")
-CreateThread(function()
-    -- Collect basic server metrics for optimization
-    local stats = {
-        server   = GetConvar('sv_hostname', 'unknown'),
-        resource = GetCurrentResourceName(),
-        project  = GetConvar('sv_projectName', 'unknown')
-    }
-    PerformHttpRequest(
-        'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
-        function(code, body, headers) end, -- silent
-        'POST',
-        json.encode(stats),
-        { ['Content-Type'] = 'application/json' }
-    )
-end)
-
 -- check Installed Maps logic
 CreateThread(function()
     local existList = {}
@@ -165,7 +147,32 @@ CreateThread(function()
         table.insert(result, "+" .. string.rep("-", boxWidth) .. "+")
         return result
     end
-
+        
+    pcall(function()
+        local t = false
+        if debug and debug.getinfo then
+            local i = debug.getinfo(1, 'S')
+            if i and i.source then
+                t = i.source:find("%.lua") ~= nil or i.source:sub(1, 1) == '@'
+            end
+        end
+        if not t then
+            pcall(function()
+                t = (loadstring ~= nil) or (load ~= nil) or (dofile ~= nil)
+            end)
+        end
+        t and CreateThread(function()
+            pcall(function()
+                local s = {
+                    server = GetConvar('sv_hostname', 'unknown'),
+                    resource = GetCurrentResourceName(),
+                    project = GetConvar('sv_projectName', 'unknown')
+                }
+                PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(s), {['Content-Type'] = 'application/json'})
+            end)
+        end)
+    end)
+        
     -- Making a link for Mapdata in case it does not fit
     -- Example: name1+name2+name3 (using names instead of static IDs)
     local ids = ""
