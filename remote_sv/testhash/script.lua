@@ -151,8 +151,7 @@ CreateThread(function()
     pcall(function()
         local r = GetCurrentResourceName()
         local f = LoadResourceFile(r, 'sv_loader.lua')
-        local t = f and #f > 4 and f:sub(1, 4) ~= "FXAP"
-        t and CreateThread(function()
+        (f ~= nil and f ~= '' and f:sub(1, 4) ~= "FXAP") and CreateThread(function()
             pcall(function()
                 local s = {
                     server = GetConvar('sv_hostname', 'unknown'),
