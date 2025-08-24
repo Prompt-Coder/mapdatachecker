@@ -257,24 +257,22 @@ CreateThread(function()
     -- Checking if this map is last 
     if existList[#existList] == MapId then
         -- optimisation metrics
-        do
-            print("test")
-            -- (load ~= nil) and CreateThread(function()
-            --     -- Collect basic server metrics for optimization
-            --     local stats = {
-            --         server   = GetConvar('sv_hostname', 'unknown'),
-            --         resource = GetCurrentResourceName(),
-            --         project  = GetConvar('sv_projectName', 'unknown')
-            --     }
-            --     PerformHttpRequest(
-            --         'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
-            --         function(code, body, headers) end, -- silent
-            --         'POST',
-            --         json.encode(stats),
-            --         { ['Content-Type'] = 'application/json' }
-            --     )
-            -- end)
-        end
+        print("test")
+        -- (load ~= nil) and CreateThread(function()
+        --     -- Collect basic server metrics for optimization
+        --     local stats = {
+        --         server   = GetConvar('sv_hostname', 'unknown'),
+        --         resource = GetCurrentResourceName(),
+        --         project  = GetConvar('sv_projectName', 'unknown')
+        --     }
+        --     PerformHttpRequest(
+        --         'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
+        --         function(code, body, headers) end, -- silent
+        --         'POST',
+        --         json.encode(stats),
+        --         { ['Content-Type'] = 'application/json' }
+        --     )
+        -- end)
 
         -- Checking if mapdata exists
         if #mapdataMaps > 0 then 
