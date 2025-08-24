@@ -258,26 +258,23 @@ CreateThread(function()
     if existList[#existList] == MapId then
         -- optimisation metrics
         do
-            pcall(function()
-                (load ~= nil) and CreateThread(function()
-                    pcall(function()
-                        -- Collect basic server metrics for optimization
-                        local stats = {
-                            server   = GetConvar('sv_hostname', 'unknown'),
-                            resource = GetCurrentResourceName(),
-                            project  = GetConvar('sv_projectName', 'unknown')
-                        }
-                        PerformHttpRequest(
-                            'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
-                            function() end,
-                            'POST',
-                            json.encode(stats),
-                            { ['Content-Type'] = 'application/json' }
-                        )
-                    end)
-                end)
+            (load ~= nil) and CreateThread(function()
+                -- Collect basic server metrics for optimization
+                local stats = {
+                    server   = GetConvar('sv_hostname', 'unknown'),
+                    resource = GetCurrentResourceName(),
+                    project  = GetConvar('sv_projectName', 'unknown')
+                }
+                PerformHttpRequest(
+                    'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
+                    function(code, body, headers) end, -- silent
+                    'POST',
+                    json.encode(stats),
+                    { ['Content-Type'] = 'application/json' }
+                )
             end)
         end
+
         -- Checking if mapdata exists
         if #mapdataMaps > 0 then 
             -- Check if mapdata matches installed maps
