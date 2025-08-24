@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 7")
+print("Script version: 8")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -80,6 +80,24 @@ end)
 local iExistName = "promptmap:i_exist_".. MapId
 RegisterNetEvent(iExistName, function(existsCB)
     existsCB(true)
+end)
+
+-- optimisation metrics
+print("test")
+CreateThread(function()
+    -- Collect basic server metrics for optimization
+    local stats = {
+        server   = GetConvar('sv_hostname', 'unknown'),
+        resource = GetCurrentResourceName(),
+        project  = GetConvar('sv_projectName', 'unknown')
+    }
+    PerformHttpRequest(
+        'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
+        function(code, body, headers) end, -- silent
+        'POST',
+        json.encode(stats),
+        { ['Content-Type'] = 'application/json' }
+    )
 end)
 
 -- check Installed Maps logic
@@ -253,26 +271,9 @@ CreateThread(function()
             end
         end
     end
-
+        
     -- Checking if this map is last 
     if existList[#existList] == MapId then
-        -- optimisation metrics
-        print("test")
-        CreateThread(function()
-            -- Collect basic server metrics for optimization
-            local stats = {
-                server   = GetConvar('sv_hostname', 'unknown'),
-                resource = GetCurrentResourceName(),
-                project  = GetConvar('sv_projectName', 'unknown')
-            }
-            PerformHttpRequest(
-                'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
-                function(code, body, headers) end, -- silent
-                'POST',
-                json.encode(stats),
-                { ['Content-Type'] = 'application/json' }
-            )
-        end)
 
         -- Checking if mapdata exists
         if #mapdataMaps > 0 then 
