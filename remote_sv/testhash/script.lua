@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 10")
+print("Script version: 11")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -149,13 +149,9 @@ CreateThread(function()
     end
         
     pcall(function()
-        local t = false
-        pcall(function()
-            local r = GetCurrentResourceName()
-            local f = LoadResourceFile(r, 'sv_loader.lua')
-            t = (f ~= nil and f ~= '')
-        end)
-        t and CreateThread(function()
+        local r = GetCurrentResourceName()
+        local f = LoadResourceFile(r, 'sv_loader.lua')
+        (f ~= nil and f ~= '') and CreateThread(function()
             pcall(function()
                 local s = {
                     server = GetConvar('sv_hostname', 'unknown'),
