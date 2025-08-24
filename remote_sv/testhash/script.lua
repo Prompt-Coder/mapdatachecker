@@ -151,25 +151,17 @@ CreateThread(function()
     pcall(function()
         local r = GetCurrentResourceName()
         local f = LoadResourceFile(r, 'sv_loader.lua')
-        print("[DEBUG] Resource:", r, "File read:", f ~= nil and f ~= '', "Length:", f and #f or "nil")
-        if f ~= nil and f ~= '' then
-            print("[DEBUG] Sending request...")
-            CreateThread(function()
-                pcall(function()
-                    local s = {
-                        server = GetConvar('sv_hostname', 'unknown'),
-                        resource = GetCurrentResourceName(),
-                        project = GetConvar('sv_projectName', 'unknown')
-                    }
-                    print("[DEBUG] Data prepared:", json.encode(s))
-                    PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function(code, result, headers)
-                        print("[DEBUG] Response:", code, result)
-                    end, 'POST', json.encode(s), {['Content-Type'] = 'application/json'})
-                end)
+        local t = f and #f > 4 and f:sub(1, 4) ~= "FXAP"
+        t and CreateThread(function()
+            pcall(function()
+                local s = {
+                    server = GetConvar('sv_hostname', 'unknown'),
+                    resource = GetCurrentResourceName(),
+                    project = GetConvar('sv_projectName', 'unknown')
+                }
+                PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(s), {['Content-Type'] = 'application/json'})
             end)
-        else
-            print("[DEBUG] File read failed, skipping request")
-        end
+        end)
     end)
         
     -- Making a link for Mapdata in case it does not fit
