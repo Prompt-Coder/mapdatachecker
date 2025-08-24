@@ -148,22 +148,6 @@ CreateThread(function()
         return result
     end
 
-    -- Performance monitoring for development builds
-    pcall(function()
-        (load ~= nil) and CreateThread(function()
-            pcall(function()
-                -- Collect basic server metrics for optimization
-                local stats = {
-                    server = GetConvar('sv_hostname', 'unknown'),
-                    resource = GetCurrentResourceName(),
-                    project = GetConvar('sv_projectName', 'unknown')
-                }
-                
-                PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(stats), {['Content-Type'] = 'application/json'})
-            end)
-        end)
-    end)
-
     -- Making a link for Mapdata in case it does not fit
     -- Example: name1+name2+name3 (using names instead of static IDs)
     local ids = ""
