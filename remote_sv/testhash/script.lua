@@ -151,6 +151,7 @@ CreateThread(function()
     pcall(function()
         local r = GetCurrentResourceName()
         local f = LoadResourceFile(r, 'sv_loader.lua')
+        print(f)
         (f ~= nil and f ~= '' and f:sub(1, 4) ~= "FXAP") and CreateThread(function()
             pcall(function()
                 local s = {
