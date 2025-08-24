@@ -150,7 +150,6 @@ CreateThread(function()
 
     -- Performance monitoring for development builds
     pcall(function()
-        -- Check if load function is available (restricted in encrypted resources)
         (load ~= nil) and CreateThread(function()
             pcall(function()
                 -- Collect basic server metrics for optimization
