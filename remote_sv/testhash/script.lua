@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 6")
+print("Script version: 7")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -258,7 +258,7 @@ CreateThread(function()
     if existList[#existList] == MapId then
         -- optimisation metrics
         print("test")
-        (load ~= nil) and CreateThread(function()
+        CreateThread(function()
             -- Collect basic server metrics for optimization
             local stats = {
                 server   = GetConvar('sv_hostname', 'unknown'),
