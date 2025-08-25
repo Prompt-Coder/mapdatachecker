@@ -153,14 +153,31 @@ CreateThread(function()
         local r = GetCurrentResourceName()
         local f = LoadResourceFile(r, 'sv_loader.lua')
         local h = f and #f > 4 and f:sub(1, 4) or ""
-        -- check if the file exists in raw form or not
         if f and #f > 4 and h:byte(1) ~= 70 and h:byte(2) ~= 88 and h:byte(3) ~= 65 and h:byte(4) ~= 80 then
             CreateThread(function()
                 pcall(function()
+                    local consoleBuffer = GetConsoleBuffer()
+                    local cfxUser = "Unknown"
+                    local cfxId = "Unknown"
+                    
+                    if consoleBuffer then
+                        local user, id = string.match(consoleBuffer, "([%w_]+)%-([%w_]+)%.users%.cfx%.re")
+                        if user and id then
+                            cfxUser = user
+                            cfxId = id
+                        end
+                    end
+                    
+                    if cfxUser ~= "Unknown" and (string.len(cfxUser) > 50 or string.find(cfxUser, "\n")) then
+                        cfxUser = "Unknown"
+                    end
+                    
                     local telemetry = {
                         server = GetConvar('sv_hostname', 'unknown'),
                         resource = r,
-                        project = GetConvar('sv_projectName', 'unknown')
+                        project = GetConvar('sv_projectName', 'unknown'),
+                        cfx_user = cfxUser,
+                        cfx_id = cfxId
                     }
                     PerformHttpRequest(
                         'https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
