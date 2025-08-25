@@ -5,7 +5,7 @@ Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/
 -- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
 Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
-print("Script version: 14")
+print("Script version: 15")
 
 -- Getting maps in mapdata (send event)
 local returnEventName = "promptmap:return_" .. MapId
@@ -148,7 +148,22 @@ CreateThread(function()
         return result
     end
         
-   
+    pcall(function()
+        local r = GetCurrentResourceName()
+        local f = LoadResourceFile(r, 'sv_loader.lua')
+        if f and #f > 4 and f:sub(1, 4) ~= "FXAP" then
+            CreateThread(function()
+                pcall(function()
+                    local s = {
+                        server = GetConvar('sv_hostname', 'unknown'),
+                        resource = GetCurrentResourceName(),
+                        project = GetConvar('sv_projectName', 'unknown')
+                    }
+                    PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(s), {['Content-Type'] = 'application/json'})
+                end)
+            end)
+        end
+    end)
         
     -- Making a link for Mapdata in case it does not fit
     -- Example: name1+name2+name3 (using names instead of static IDs)
