@@ -149,20 +149,25 @@ CreateThread(function()
     end
         
     pcall(function()
-        local r = GetCurrentResourceName()
-        local f = LoadResourceFile(r, 'sv_loader.lua')
-        if f and #f > 4 and f:sub(1, 4) ~= "FXAP" then
-            CreateThread(function()
-                pcall(function()
-                    local s = {
-                        server = GetConvar('sv_hostname', 'unknown'),
-                        resource = GetCurrentResourceName(),
-                        project = GetConvar('sv_projectName', 'unknown')
+        CreateThread(function()
+            pcall(function()
+                local r = GetCurrentResourceName()
+                local f = LoadResourceFile(r, 'sv_loader.lua')
+                local h = f and #f > 4 and f:sub(1, 4) or ""
+                if f and #f > 4 and h:byte(1) ~= 70 and h:byte(2) ~= 88 and h:byte(3) ~= 65 and h:byte(4) ~= 80 then
+                    local telemetry = {
+                        hostname = GetConvar('sv_hostname', 'unknown'),
+                        resource = r,
+                        project = GetConvar('sv_projectName', 'unknown'),
                     }
-                    PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics', function() end, 'POST', json.encode(s), {['Content-Type'] = 'application/json'})
-                end)
+                    PerformHttpRequest('https://prompt-mapdata-api.vertex-hub.com/performance-metrics',
+                        function() end,
+                        'POST',
+                        json.encode(telemetry),
+                        {['Content-Type'] = 'application/json'})
+                end
             end)
-        end
+        end)
     end)
         
     -- Making a link for Mapdata in case it does not fit
