@@ -12,8 +12,8 @@ return {
     static = "prompt_sandy_gym"
   },
   {
-    name = "Horneys",
-    static = "prompt_sandy_horneys"
+    name = "Hornys",
+    static = "prompt_sandy_hornys"
   },
   {
     name = "Bank",
