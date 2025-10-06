@@ -1,4 +1,8 @@
 return {
+{
+    name = "Uni",
+    static = "prompt_sandy_university"
+  },
   {
     name = "Apts",
     static = "prompt_sandy_apts"
