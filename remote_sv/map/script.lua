@@ -233,69 +233,94 @@ CreateThread(function()
 
     -- Function to check if mapdata matches installed maps and print results
     local function checkMapdataMatch(mapdataMaps, existList, link)
-        local same = true
-        -- sort copy of both tables
-        local tempMapdataMaps = {}
-        local tempExistList = {}
-
-        for i = 1, #mapdataMaps do
-            table.insert(tempMapdataMaps, mapdataMaps[i])
+        -- helper: quick lookup sets
+        local function toSet(list)
+            local s = {}
+            for i = 1, #list do s[list[i]] = true end
+            return s
         end
-
-        for i = 1, #existList do
-            table.insert(tempExistList, existList[i])
+    
+        -- helper: id -> pretty name (falls back to id)
+        local function idToName(id)
+            for i = 1, #allMaps do
+                if allMaps[i] == id then
+                    return mapNames[i] or id
+                end
+            end
+            return id
         end
-
+    
+        -- copy + sort for equality check (kept from your logic)
+        local tempMapdataMaps, tempExistList = {}, {}
+        for i = 1, #mapdataMaps do tempMapdataMaps[i] = mapdataMaps[i] end
+        for i = 1, #existList do tempExistList[i] = existList[i] end
         table.sort(tempMapdataMaps)
         table.sort(tempExistList)
-
-        if #tempMapdataMaps ~= #tempExistList then
-            same = false
-        end
-
-        for i = 1, #tempMapdataMaps do
-            if tempMapdataMaps[i] ~= tempExistList[i] then
-                same = false
-                break
-            end
-        end
-        
-        -- Printing result
-        if same == false then 
-            if #existList > #mapdataMaps then
-                local boxLines = {
-                    "❌ ^8 Mapdata is not the same as maps installed^7",
-                    "^8 There are more maps than mapdata supports!^7",
-                    "^8" .. link .. "^7"
-                }
-                
-                local box = CreateBox(boxLines)
-                for _, line in ipairs(box) do
-                    print(line)
-                end
-            elseif #existList < #mapdataMaps then
-                local boxLines = {
-                    "❌ ^8 Mapdata is not the same as maps installed^7",
-                    "^8 There are less maps than mapdata supports!^7",
-                    "^8" .. link .. "^7"
-                }
-                
-                local box = CreateBox(boxLines)
-                for _, line in ipairs(box) do
-                    print(line)
+    
+        local same = true
+        if #tempMapdataMaps ~= #tempExistList then same = false end
+        if same then
+            for i = 1, #tempMapdataMaps do
+                if tempMapdataMaps[i] ~= tempExistList[i] then
+                    same = false
+                    break
                 end
             end
-        else 
-            local boxLines = {
-                "✅ ^2Mapdata is the same as maps installed^7"
-            }
-            
-            local box = CreateBox(boxLines)
-            for _, line in ipairs(box) do
-                print(line)
-            end
         end
+    
+        if same then
+            local box = CreateBox({ "✅ ^2Mapdata is the same as maps installed^7" })
+            for _, line in ipairs(box) do print(line) end
+            return
+        end
+    
+        -- compute diffs
+        local existSet = toSet(existList)
+        local mapdataSet = toSet(mapdataMaps)
+    
+        local excess, missing = {}, {}
+        for i = 1, #existList do
+            local id = existList[i]
+            if not mapdataSet[id] then table.insert(excess, id) end
+        end
+        for i = 1, #mapdataMaps do
+            local id = mapdataMaps[i]
+            if not existSet[id] then table.insert(missing, id) end
+        end
+    
+        -- format helpers
+        local function namesCSV(list)
+            if #list == 0 then return "none" end
+            local names = {}
+            for i = 1, #list do names[i] = idToName(list[i]) end
+            table.sort(names)
+            return table.concat(names, ", ")
+        end
+    
+        -- build message
+        local header = "❌ ^8 Mapdata is not the same as maps installed^7"
+        local moreLess
+        if #existList > #mapdataMaps then
+            moreLess = "^8 There are more maps than mapdata supports!^7"
+        elseif #existList < #mapdataMaps then
+            moreLess = "^8 There are less maps than mapdata supports!^7"
+        else
+            -- same count but different contents
+            moreLess = "^8 The sets differ even though counts match.^7"
+        end
+    
+        local boxLines = {
+            header,
+            moreLess,
+            "^8 Excess (installed but not in mapdata):^7 " .. namesCSV(excess),
+            "^8 Missing (in mapdata but not installed):^7 " .. namesCSV(missing),
+            "^8" .. link .. "^7"
+        }
+    
+        local box = CreateBox(boxLines)
+        for _, line in ipairs(box) do print(line) end
     end
+
 
     -- Checking if this map is last 
     if existList[#existList] == MapId then
