@@ -1,5 +1,9 @@
 return {
   {
+    name = "Apts",
+    static = "prompt_sandy_apts"
+  },
+  {
     name = "Gym",
     static = "prompt_sandy_gym"
   },
