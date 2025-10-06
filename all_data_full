@@ -21,7 +21,8 @@ return {
   },
   {
     name = "Market",
-    static = "prompt_sandy_market"
+    static = "prompt_sandy_market",
+    tebex = 6969726
   },
   {
     name = "Motel",
