@@ -1,5 +1,9 @@
 return {
-{
+  {
+    name = "Joshua",
+    static = "prompt_sandy_joshua"
+  },
+  {
     name = "Uni",
     static = "prompt_sandy_university"
   },
