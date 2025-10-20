@@ -1,5 +1,4 @@
-2.0.1
- - Collision fixes
- - Added emissive reflections from rain in the night (look soo cool)
- - Improved timecycles inside interiors
-
+2.0.2
+ - All 16 houses Interiors Added
+ - Multiple Fixes
+ - Do not forget to Update Shared Files (or interiors won't work)
