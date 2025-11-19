@@ -1,2 +1,6 @@
-1.1.0
+1.1.1
+ - Gym Update
+ - Fixed Duplicate ytyp entries
+ - Crash Fixes around the Sandy Gym
+ Previous Fixes 1.1.0:
  - Fixed Pool Size crash for NVE users
