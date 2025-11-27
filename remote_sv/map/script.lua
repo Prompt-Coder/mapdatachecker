@@ -436,14 +436,14 @@ CreateThread(function()
             moreLess = "^8 The sets differ even though counts match.^7"
         end
     
-        local linkLine = link and ("🔗 Download: " .. link) or "🔗 No download link available"
+        local linkLine = link and ("^5🔗 Download: " .. link .. "^7") or "^3🔗 No download link available^7"
         
         local boxLines = {
             header,
             moreLess,
             "^8 Excess (installed but not in mapdata):^7 " .. namesCSV(excess),
             "^8 Missing (in mapdata but not installed):^7 " .. namesCSV(missing),
-            "^8 " .. linkLine .. "^7"
+            linkLine
         }
     
         local box = CreateBox(boxLines)
@@ -488,10 +488,10 @@ CreateThread(function()
             if foundLegacyMapdata == true then
                 checkMapdataMatchForLocation(legacyMapdataMaps, locationInstalled, link, locationName)
             else
-                local linkLine = link and ("🔗 Download: " .. link) or "🔗 No download link available"
+                local linkLine = link and ("^5🔗 Download: " .. link .. "^7") or "^3🔗 No download link available^7"
                 local boxLines = {
                     "❌ ^8 [" .. locationLabel .. "] Mapdata does not exist ^7",
-                    "^8 " .. linkLine .. "^7"
+                    linkLine
                 }
                 
                 local box = CreateBox(boxLines)
