@@ -1,28 +1,61 @@
 -- All maps list (Lua file with table structure)
 Urls.AllMapList = "https://raw.githubusercontent.com/Prompt-Coder/mapdatachecker/refs/heads/main/all_data_full"
--- Direct url to mapdata on Github (%s will be replaced with map names in the format of name1+name2+name3)
-Urls.DownloadUrl = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/heads/SandyMapData----%s"
--- Direct url to mapdata to generate (%s will be replaced with map names in the format of name1+name2+name3)
-Urls.PlatformUrl = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s"
 
--- print("Script version: 2")
+-- Location-specific URLs
+Urls.Download = {
+    sandy = "https://github.com/Prompt-Coder/Sandy-Map-Data/archive/refs/heads/SandyMapData----%s",
+    paleto = "https://github.com/Prompt-Coder/Paleto-Map-Data/archive/refs/heads/PaletoMapData----%s"
+}
+Urls.Platform = {
+    sandy = "https://vertex-hub.com/prompt/map-data/sandy-rework/%s",
+    paleto = "https://vertex-hub.com/prompt/map-data/paleto-rework/%s"
+}
 
--- Getting maps in mapdata (send event)
+-- Backwards compatibility for old URLs
+Urls.DownloadUrl = Urls.Download.sandy
+Urls.PlatformUrl = Urls.Platform.sandy
+
+-- print("Script version: 3 - Multi-location support")
+
+--[[
+    LOCATION DETECTION
+    For multi-location maps, sv_loader sets DetectedLocations before loading this script.
+    For old single-location maps, DetectedLocations is nil and we use registry.
+    
+    This map's actual locations (detected folders or fallback to registry)
+]]
+local myActualLocations = DetectedLocations -- Set by sv_loader for multi-location maps (or nil)
+
+-- Getting maps in mapdata (send event) - Now location aware
 local returnEventName = "promptmap:return_" .. MapId
 CreateThread(function()
+    -- Request sandy mapdata list (backwards compatible)
     TriggerEvent("prompt:mapdata_sendList", returnEventName)
+    -- Request paleto mapdata list (new)
+    TriggerEvent("prompt:mapdata_paleto_sendList", returnEventName .. "_paleto")
 end)
 
--- Getting maps in mapdata (return event)
-local mapdataMaps = {}
+-- Getting maps in mapdata (return event) - Now per location
+local mapdataMaps = {
+    sandy = {},
+    paleto = {}
+}
+
 RegisterNetEvent(returnEventName, function(maps)
-    mapdataMaps = maps
+    mapdataMaps.sandy = maps or {}
 end)
 
--- Getting all maps possible
-local allMaps = {}
-local mapNames = {}
+RegisterNetEvent(returnEventName .. "_paleto", function(maps)
+    mapdataMaps.paleto = maps or {}
+end)
+
+-- Getting all maps possible - Now with locations
+local allMaps = {}           -- Array of static IDs
+local mapNames = {}          -- Array of display names  
+local mapLocations = {}      -- Map of static ID -> locations array (from registry)
 local myName = ""
+local myRegistryLocations = {} -- Locations from registry
+
 PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
     if err ~= 200 then 
         print("Please update the map, it has old code.")
@@ -32,16 +65,52 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
             local mapTable = mapData()
 
             for i = 1, #mapTable do 
-                table.insert(allMaps, mapTable[i].static)
-                table.insert(mapNames, mapTable[i].name)
+                local entry = mapTable[i]
+                table.insert(allMaps, entry.static)
+                table.insert(mapNames, entry.name)
+                
+                -- Store locations (default to {"sandy"} for backwards compatibility)
+                mapLocations[entry.static] = entry.locations or {"sandy"}
 
-                if allMaps[i] == MapId then
-                    myName = mapTable[i].name
+                if entry.static == MapId then
+                    myName = entry.name
+                    myRegistryLocations = entry.locations or {"sandy"}
+                end
+            end
+            
+            -- If no DetectedLocations from sv_loader, use registry locations
+            if myActualLocations == nil then
+                myActualLocations = myRegistryLocations
+            end
+            
+            --[[
+                LEGACY EXCEPTION: Auto-detect paleto for old prompt_sandy_gym
+                Old sv_loader doesn't set DetectedLocations, but the map might have
+                both sandy and paleto folders. This auto-detects paleto folder.
+            ]]
+            if MapId == "prompt_sandy_gym" and DetectedLocations == nil then
+                local resourceName = GetCurrentResourceName()
+                local hasPaleto = LoadResourceFile(resourceName, "stream/paleto/enabled.txt")
+                
+                if hasPaleto then
+                    -- Check if paleto not already in the list
+                    local paletoFound = false
+                    for _, loc in ipairs(myActualLocations) do
+                        if loc == "paleto" then paletoFound = true break end
+                    end
+                    
+                    if not paletoFound then
+                        table.insert(myActualLocations, "paleto")
+                        if Debug == true then
+                            print("^2[" .. resourceName .. "] Auto-detected paleto folder (legacy gym exception)^7")
+                        end
+                    end
                 end
             end
 
             if Debug == true then 
                 print("Loaded ", #mapTable, " maps from all-data")
+                print("My locations (actual): ", table.concat(myActualLocations, ", "))
             end
         else
             print("Failed to load map data, it has an invalid format.")
@@ -51,7 +120,7 @@ end, "GET")
 
 --[[
     LEGACY MAP SUPPORT
---]]
+]]
 
 local legacyEvents = {
     exists = MapId .. ":mapExists",
@@ -74,12 +143,19 @@ end)
 
 --[[
     LEGACY MAP SUPPORT END
---]]
+]]
 
 -- I exist event
 local iExistName = "promptmap:i_exist_".. MapId
 RegisterNetEvent(iExistName, function(existsCB)
     existsCB(true)
+end)
+
+-- Report my actual locations event (for multi-location support)
+local myLocationsEventName = "promptmap:locations_" .. MapId
+RegisterNetEvent(myLocationsEventName, function(cb)
+    -- Return actual detected locations (or registry if not detected)
+    cb(myActualLocations or myRegistryLocations or {"sandy"})
 end)
 
 -- check Installed Maps logic
@@ -118,7 +194,6 @@ CreateThread(function()
         end
     end
 
-    -- Print legacy maps found message
     -- Function to create a consistent box with dynamic width based on content
     local function CreateBox(lines)
         -- Find the longest line to determine box width
@@ -191,69 +266,122 @@ CreateThread(function()
         end
     end)
 
-    -- Making a link for Mapdata in case it does not fit
-    -- Example: name1+name2+name3 (using names instead of static IDs)
-    local ids = ""
+    -- Query actual locations for each installed map
+    local actualMapLocations = {}
     for i = 1, #existList do
-        local mapName = ""
-        local tempId = 1
-        for j = 1, #allMaps do
-            if allMaps[j] == existList[i] then
-                tempId = j
-                break
-            end
-        end
-
-        mapName = mapNames[tempId]
-        ids = ids..mapName
-        if i ~= #existList then
-            ids = ids.."+"
-        end
-    end
-
-    local link = string.format(Urls.DownloadUrl, ids)
-    local returned = false
-
-    -- Checking if link exists
-    PerformHttpRequest(link, function(code, text, headers)
-        local finalUrl = ""
-        if code == 200 then
-            finalUrl = link .. ".zip"
+        local mapId = existList[i]
+        local locEventName = "promptmap:locations_" .. mapId
+        local queriedLocations = nil
+        
+        TriggerEvent(locEventName, function(locs)
+            queriedLocations = locs
+        end)
+        
+        Wait(50)
+        
+        -- Use queried locations if available, otherwise fall back to registry
+        if queriedLocations and #queriedLocations > 0 then
+            actualMapLocations[mapId] = queriedLocations
         else
-            finalUrl = string.format(Urls.PlatformUrl, ids)
+            actualMapLocations[mapId] = mapLocations[mapId] or {"sandy"}
         end
-        link = ("| 🔗 Download: %-56s |"):format(finalUrl)
-
-        returned = true
-    end, "GET")
-
-    while returned == false do
-        Wait(100)
+        
+        if Debug == true then
+            print("Map " .. mapId .. " actual locations: " .. table.concat(actualMapLocations[mapId], ", "))
+        end
     end
 
-    -- Function to check if mapdata matches installed maps and print results
-    local function checkMapdataMatch(mapdataMaps, existList, link)
-        -- helper: quick lookup sets
-        local function toSet(list)
-            local s = {}
-            for i = 1, #list do s[list[i]] = true end
-            return s
-        end
-    
-        -- helper: id -> pretty name (falls back to id)
-        local function idToName(id)
-            for i = 1, #allMaps do
-                if allMaps[i] == id then
-                    return mapNames[i] or id
+    -- Helper function to group maps by location using ACTUAL locations
+    local function groupMapsByLocation(mapList)
+        local groups = {
+            sandy = {},
+            paleto = {}
+        }
+        
+        for i = 1, #mapList do
+            local mapId = mapList[i]
+            local locations = actualMapLocations[mapId] or {"sandy"}
+            
+            for _, loc in ipairs(locations) do
+                if groups[loc] then
+                    table.insert(groups[loc], mapId)
                 end
             end
-            return id
         end
-    
-        -- copy + sort for equality check (kept from your logic)
+        
+        return groups
+    end
+
+    -- Helper function to generate download link for a location
+    local function generateLink(mapList, location, callback)
+        -- Build names string: name1+name2+name3
+        local ids = ""
+        for i = 1, #mapList do
+            local mapName = ""
+            for j = 1, #allMaps do
+                if allMaps[j] == mapList[i] then
+                    mapName = mapNames[j]
+                    break
+                end
+            end
+            
+            ids = ids .. mapName
+            if i ~= #mapList then
+                ids = ids .. "+"
+            end
+        end
+        
+        if ids == "" then
+            callback(nil)
+            return
+        end
+        
+        local downloadUrl = Urls.Download[location]
+        local platformUrl = Urls.Platform[location]
+        
+        if not downloadUrl or not platformUrl then
+            callback(nil)
+            return
+        end
+        
+        local link = string.format(downloadUrl, ids)
+        
+        PerformHttpRequest(link, function(code, text, headers)
+            local finalUrl = ""
+            if code == 200 then
+                finalUrl = link .. ".zip"
+            else
+                finalUrl = string.format(platformUrl, ids)
+            end
+            callback(finalUrl)
+        end, "GET")
+    end
+
+    -- Helper: id -> pretty name
+    local function idToName(id)
+        for i = 1, #allMaps do
+            if allMaps[i] == id then
+                return mapNames[i] or id
+            end
+        end
+        return id
+    end
+
+    -- Helper: list to set
+    local function toSet(list)
+        local s = {}
+        for i = 1, #list do s[list[i]] = true end
+        return s
+    end
+
+    -- Function to check mapdata match for a specific location
+    local function checkMapdataMatchForLocation(locationMapdata, locationInstalled, link, locationName)
+        local locationLabel = locationName:sub(1,1):upper() .. locationName:sub(2) -- Capitalize
+        
+        -- copy + sort for equality check
         local tempMapdataMaps, tempExistList = {}, {}
-        for i = 1, #mapdataMaps do tempMapdataMaps[i] = mapdataMaps[i] end
-        for i = 1, #existList do tempExistList[i] = existList[i] end
+        for i = 1, #locationMapdata do tempMapdataMaps[i] = locationMapdata[i] end
+        for i = 1, #locationInstalled do tempExistList[i] = locationInstalled[i] end
         table.sort(tempMapdataMaps)
         table.sort(tempExistList)
     
@@ -269,22 +397,22 @@ CreateThread(function()
         end
     
         if same then
-            local box = CreateBox({ "✅ ^2Mapdata is the same as maps installed^7" })
+            local box = CreateBox({ "✅ ^2[" .. locationLabel .. "] Mapdata is the same as maps installed^7" })
             for _, line in ipairs(box) do print(line) end
             return
         end
     
         -- compute diffs
-        local existSet = toSet(existList)
-        local mapdataSet = toSet(mapdataMaps)
+        local existSet = toSet(locationInstalled)
+        local mapdataSet = toSet(locationMapdata)
     
         local excess, missing = {}, {}
-        for i = 1, #existList do
-            local id = existList[i]
+        for i = 1, #locationInstalled do
+            local id = locationInstalled[i]
             if not mapdataSet[id] then table.insert(excess, id) end
         end
-        for i = 1, #mapdataMaps do
-            local id = mapdataMaps[i]
+        for i = 1, #locationMapdata do
+            local id = locationMapdata[i]
             if not existSet[id] then table.insert(missing, id) end
         end
     
@@ -298,48 +426,49 @@ CreateThread(function()
         end
     
         -- build message
-        local header = "❌ ^8 Mapdata is not the same as maps installed^7"
+        local header = "❌ ^8 [" .. locationLabel .. "] Mapdata is not the same as maps installed^7"
         local moreLess
-        if #existList > #mapdataMaps then
+        if #locationInstalled > #locationMapdata then
             moreLess = "^8 There are more maps than mapdata supports!^7"
-        elseif #existList < #mapdataMaps then
+        elseif #locationInstalled < #locationMapdata then
             moreLess = "^8 There are less maps than mapdata supports!^7"
         else
-            -- same count but different contents
             moreLess = "^8 The sets differ even though counts match.^7"
         end
     
+        local linkLine = link and ("🔗 Download: " .. link) or "🔗 No download link available"
+        
         local boxLines = {
             header,
             moreLess,
             "^8 Excess (installed but not in mapdata):^7 " .. namesCSV(excess),
             "^8 Missing (in mapdata but not installed):^7 " .. namesCSV(missing),
-            "^8" .. link .. "^7"
+            "^8 " .. linkLine .. "^7"
         }
     
         local box = CreateBox(boxLines)
         for _, line in ipairs(box) do print(line) end
     end
 
-
-    -- Checking if this map is last 
-    if existList[#existList] == MapId then
-        -- Checking if mapdata exists
-        if #mapdataMaps > 0 then 
-            -- Check if mapdata matches installed maps
-            checkMapdataMatch(mapdataMaps, existList, link)
-        else 
-            -- Check for legacy mapdata events
+    -- Function to check mapdata for a location (with legacy fallback)
+    local function checkLocationMapdata(locationName, locationInstalled, link)
+        local locationLabel = locationName:sub(1,1):upper() .. locationName:sub(2)
+        local locationMapdataList = mapdataMaps[locationName] or {}
+        
+        if #locationMapdataList > 0 then
+            -- Mapdata exists, check if it matches
+            checkMapdataMatchForLocation(locationMapdataList, locationInstalled, link, locationName)
+        else
+            -- Try legacy mapdata events
             local legacyMapdataMaps = {}
             local foundLegacyMapdata = false
             
-            -- Loop through all maps in existList to check for legacy mapdata events
-            for i = 1, #existList do
-                local legacyMapdataCheckName = existList[i] .. ":mapDataExists"
+            for i = 1, #locationInstalled do
+                local legacyMapdataCheckName = locationInstalled[i] .. ":mapDataExists"
                 local legacyMapdataExists = false
                 
                 if Debug == true then
-                    print("Checking for legacy mapdata: " .. existList[i])
+                    print("Checking for legacy mapdata: " .. locationInstalled[i])
                 end
                 
                 TriggerEvent(legacyMapdataCheckName, function(existsCB)
@@ -349,29 +478,67 @@ CreateThread(function()
                 
                 if legacyMapdataExists == true then
                     if Debug == true then
-                        print("Found legacy mapdata for: " .. existList[i])
+                        print("Found legacy mapdata for: " .. locationInstalled[i])
                     end
-                    table.insert(legacyMapdataMaps, existList[i])
+                    table.insert(legacyMapdataMaps, locationInstalled[i])
                     foundLegacyMapdata = true
                 end
             end
             
             if foundLegacyMapdata == true then
-                -- Update mapdataMaps with legacy data
-                mapdataMaps = legacyMapdataMaps
-                
-                -- Check if mapdata matches installed maps
-                checkMapdataMatch(mapdataMaps, existList, link)
+                checkMapdataMatchForLocation(legacyMapdataMaps, locationInstalled, link, locationName)
             else
+                local linkLine = link and ("🔗 Download: " .. link) or "🔗 No download link available"
                 local boxLines = {
-                    "❌ ^8 Mapdata does not exist ^7",
-                    "^8" .. link .. "^7"
+                    "❌ ^8 [" .. locationLabel .. "] Mapdata does not exist ^7",
+                    "^8 " .. linkLine .. "^7"
                 }
                 
                 local box = CreateBox(boxLines)
                 for _, line in ipairs(box) do
                     print(line)
                 end
+            end
+        end
+    end
+
+    -- Group installed maps by location using ACTUAL detected locations
+    local installedByLocation = groupMapsByLocation(existList)
+    
+    -- Checking if this map is last 
+    if existList[#existList] == MapId then
+        -- Process each location that has installed maps
+        local locationsToCheck = {"sandy", "paleto"}
+        local linksGenerated = 0
+        local linksNeeded = 0
+        local links = {}
+        
+        -- Count how many locations need links
+        for _, loc in ipairs(locationsToCheck) do
+            if #installedByLocation[loc] > 0 then
+                linksNeeded = linksNeeded + 1
+            end
+        end
+        
+        -- Generate links for each location
+        for _, loc in ipairs(locationsToCheck) do
+            if #installedByLocation[loc] > 0 then
+                generateLink(installedByLocation[loc], loc, function(link)
+                    links[loc] = link
+                    linksGenerated = linksGenerated + 1
+                end)
+            end
+        end
+        
+        -- Wait for all links to be generated
+        while linksGenerated < linksNeeded do
+            Wait(100)
+        end
+        
+        -- Check mapdata for each location
+        for _, loc in ipairs(locationsToCheck) do
+            if #installedByLocation[loc] > 0 then
+                checkLocationMapdata(loc, installedByLocation[loc], links[loc])
             end
         end
     else 
