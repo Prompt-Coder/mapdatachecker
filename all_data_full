@@ -122,17 +122,17 @@ return {
     PALETO BAY MAPS (Single Location)
   ]]
   {
-    name = "Paleto Firestation",
+    name = "Firestation",
     static = "paleto_bay_fire_station",
     locations = {"paleto"}
   },
   {
-    name = "Paleto Sheriff",
+    name = "Sheriff",
     static = "prompt_tuco_paleto_sheriff",
     locations = {"paleto"}
   },
   {
-    name = "Repair Shops",
+    name = "Repair",
     static = "prompt_repair_shops",
     locations = {"paleto"}
   },
