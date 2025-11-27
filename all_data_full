@@ -163,10 +163,5 @@ return {
     name = "Gym",
     static = "prompt_sandy_gym",
     locations = {"sandy", "paleto"}
-  },
-  {
-    name = "Hornys",
-    static = "prompt_sandy_hornys",
-    locations = {"sandy"}
   }
 }
