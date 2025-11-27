@@ -1,3 +1,13 @@
+--[[
+    SANDY SHORES MAPDATA SCRIPT
+    This script is loaded by the sandy mapdata resource.
+    It responds to map detection events and reports which maps the mapdata covers.
+    
+    Required variable from mapdata resource:
+    - Maps: table of map static IDs that this mapdata covers
+    - Debug: boolean for debug messages (optional)
+]]
+
 CreateThread(function()
     local exists = false 
     TriggerEvent("prompt:mapdata_exists", function(varExists)
@@ -28,13 +38,15 @@ CreateThread(function()
     end
 end)
 
+-- Sandy mapdata list event (backwards compatible)
 RegisterNetEvent("prompt:mapdata_sendList", function(returnevent)
     if Debug == true then
-        print("Getting maps in mapdata (return event) To: ", returnevent)
+        print("[Sandy Mapdata] Sending maps list to: ", returnevent)
     end
     TriggerEvent(returnevent, Maps)
 end)
 
+-- Sandy mapdata exists event
 RegisterNetEvent("prompt:mapdata_exists", function(returnValue)
     returnValue(true)
 end)
