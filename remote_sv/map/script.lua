@@ -18,6 +18,19 @@ Urls.PlatformUrl = Urls.Platform.sandy
 -- print("Script version: 3 - Multi-location support")
 
 --[[
+    MAP ALIASES
+    Maps that have old/new versions should be treated as equivalent.
+    Add new aliases when releasing multi-location versions of existing maps.
+]]
+local mapAliases = {
+    ["prompt_gym"] = "prompt_sandy_gym",
+    ["prompt_sandy_gym"] = "prompt_gym"
+    -- Add more aliases here when needed:
+    -- ["prompt_hornys"] = "prompt_sandy_hornys",
+    -- ["prompt_sandy_hornys"] = "prompt_hornys"
+}
+
+--[[
     LOCATION DETECTION
     For multi-location maps, sv_loader sets DetectedLocations before loading this script.
     For old single-location maps, DetectedLocations is nil and we use registry.
@@ -367,34 +380,53 @@ CreateThread(function()
         return id
     end
 
-    -- Helper: list to set
+    -- Helper: list to set (includes aliases)
     local function toSet(list)
         local s = {}
-        for i = 1, #list do s[list[i]] = true end
+        for i = 1, #list do 
+            s[list[i]] = true
+            -- Also add alias if exists
+            local alias = mapAliases[list[i]]
+            if alias then s[alias] = true end
+        end
         return s
+    end
+    
+    -- Helper: check if map is in set (with alias support)
+    local function isInSet(mapId, set)
+        if set[mapId] then return true end
+        local alias = mapAliases[mapId]
+        if alias and set[alias] then return true end
+        return false
     end
 
     -- Function to check mapdata match for a specific location
     local function checkMapdataMatchForLocation(locationMapdata, locationInstalled, link, locationName)
         local locationLabel = locationName:sub(1,1):upper() .. locationName:sub(2) -- Capitalize
         
-        -- copy + sort for equality check
-        local tempMapdataMaps, tempExistList = {}, {}
-        for i = 1, #locationMapdata do tempMapdataMaps[i] = locationMapdata[i] end
-        for i = 1, #locationInstalled do tempExistList[i] = locationInstalled[i] end
-        table.sort(tempMapdataMaps)
-        table.sort(tempExistList)
-    
-        local same = true
-        if #tempMapdataMaps ~= #tempExistList then same = false end
-        if same then
-            for i = 1, #tempMapdataMaps do
-                if tempMapdataMaps[i] ~= tempExistList[i] then
-                    same = false
-                    break
-                end
+        -- Create sets for comparison (with aliases)
+        local mapdataSet = toSet(locationMapdata)
+        local installedSet = toSet(locationInstalled)
+        
+        -- Check if all installed maps are covered by mapdata (with aliases)
+        local allInstalledCovered = true
+        for i = 1, #locationInstalled do
+            if not isInSet(locationInstalled[i], mapdataSet) then
+                allInstalledCovered = false
+                break
             end
         end
+        
+        -- Check if all mapdata maps are installed (with aliases)
+        local allMapdataInstalled = true
+        for i = 1, #locationMapdata do
+            if not isInSet(locationMapdata[i], installedSet) then
+                allMapdataInstalled = false
+                break
+            end
+        end
+        
+        local same = allInstalledCovered and allMapdataInstalled
     
         if same then
             local box = CreateBox({ "✅ ^2[" .. locationLabel .. "] Mapdata is the same as maps installed^7" })
@@ -402,18 +434,15 @@ CreateThread(function()
             return
         end
     
-        -- compute diffs
-        local existSet = toSet(locationInstalled)
-        local mapdataSet = toSet(locationMapdata)
-    
+        -- compute diffs (with alias support)
         local excess, missing = {}, {}
         for i = 1, #locationInstalled do
             local id = locationInstalled[i]
-            if not mapdataSet[id] then table.insert(excess, id) end
+            if not isInSet(id, mapdataSet) then table.insert(excess, id) end
         end
         for i = 1, #locationMapdata do
             local id = locationMapdata[i]
-            if not existSet[id] then table.insert(missing, id) end
+            if not isInSet(id, installedSet) then table.insert(missing, id) end
         end
     
         -- format helpers
