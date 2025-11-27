@@ -1,105 +1,172 @@
 return {
+  --[[
+    SANDY SHORES MAPS (Single Location)
+  ]]
   {
     name = "Joshua",
-    static = "prompt_sandy_joshua"
+    static = "prompt_sandy_joshua",
+    locations = {"sandy"}
   },
   {
     name = "Uni",
-    static = "prompt_sandy_university"
+    static = "prompt_sandy_university",
+    locations = {"sandy"}
   },
   {
     name = "Corner",
-    static = "prompt_sandy_corner"
+    static = "prompt_sandy_corner",
+    locations = {"sandy"}
   },
   {
     name = "Apts",
-    static = "prompt_sandy_apts"
-  },
-  {
-    name = "Gym",
-    static = "prompt_sandy_gym"
-  },
-  {
-    name = "Hornys",
-    static = "prompt_sandy_hornys"
+    static = "prompt_sandy_apts",
+    locations = {"sandy"}
   },
   {
     name = "Bank",
-    static = "prompt_sandy_bank"
+    static = "prompt_sandy_bank",
+    locations = {"sandy"}
   },
   {
     name = "Market",
     static = "prompt_sandy_market",
-    tebex = 6969726
+    tebex = 6969726,
+    locations = {"sandy"}
   },
   {
     name = "Motel",
     static = "prompt_sandy_motel",
-    tebex = 6930575
+    tebex = 6930575,
+    locations = {"sandy"}
   },
   {
     name = "Gas",
     static = "prompt_sandy_gasstation_carwash",
-    tebex = 6704247
+    tebex = 6704247,
+    locations = {"sandy"}
   },
   {
     name = "Mechanic",
     static = "prompt_sandy_compound",
-    tebex = 6828353
+    tebex = 6828353,
+    locations = {"sandy"}
   },
   {
     name = "Church",
     static = "prompt_sandy_church",
-    tebex = 6781028
+    tebex = 6781028,
+    locations = {"sandy"}
   },
   {
     name = "Dealer",
     static = "prompt_sandy_classic_car_dealership",
-    tebex = 6725745
+    tebex = 6725745,
+    locations = {"sandy"}
   },
   {
     name = "Cityhall",
     static = "prompt_sandy_cityhall",
-    tebex = 6578222
+    tebex = 6578222,
+    locations = {"sandy"}
   },
   {
     name = "Houses1",
     static = "sandy_shores_houses_pt1",
-    tebex = 6499824
+    tebex = 6499824,
+    locations = {"sandy"}
   },
   {
     name = "Trainstation",
     static = "prompt_sandy_train_station",
-    tebex = 6521797
+    tebex = 6521797,
+    locations = {"sandy"}
   },
   {
     name = "Marina",
     static = "prompt_sandy_beaches",
-    tebex = 6443485
+    tebex = 6443485,
+    locations = {"sandy"}
   },
   {
     name = "Boathouse",
     static = "cfx_chuz_sandy_shores_boat_house",
-    tebex = 6276364
+    tebex = 6276364,
+    locations = {"sandy"}
   },
   {
     name = "Sheriff",
     static = "prompt_sandy_sheriff",
-    tebex = 6308272
+    tebex = 6308272,
+    locations = {"sandy"}
   },
   {
     name = "Hospital",
     static = "prompt_sandy_hospital",
-    tebex = 6381549
+    tebex = 6381549,
+    locations = {"sandy"}
   },
   {
     name = "Airfield",
     static = "prompt_sandy_airfield",
-    tebex = 6254445
+    tebex = 6254445,
+    locations = {"sandy"}
   },
   {
     name = "Firestation",
     static = "cfx_prompt_sandy_shores_fire_department",
-    tebex = 5203353
+    tebex = 5203353,
+    locations = {"sandy"}
+  },
+
+  --[[
+    PALETO BAY MAPS (Single Location)
+  ]]
+  {
+    name = "Paleto Firestation",
+    static = "paleto_bay_fire_station",
+    locations = {"paleto"}
+  },
+  {
+    name = "Paleto Sheriff",
+    static = "prompt_tuco_paleto_sheriff",
+    locations = {"paleto"}
+  },
+  {
+    name = "Repair Shops",
+    static = "prompt_repair_shops",
+    locations = {"paleto"}
+  },
+
+  --[[
+    MULTI-LOCATION MAPS (Sandy + Paleto)
+    These maps have both sandy and paleto folders.
+    The sv_loader detects which folders are present.
+  ]]
+  {
+    name = "Gym",
+    static = "prompt_gym",
+    locations = {"sandy", "paleto"}
+  },
+  {
+    name = "Hornys",
+    static = "prompt_hornys",
+    locations = {"sandy", "paleto"}
+  },
+
+  --[[
+    LEGACY SUPPORT
+    Old single-location versions of maps that are now multi-location.
+    Kept for backwards compatibility with customers who haven't updated yet.
+    Note: prompt_sandy_gym has auto-detection exception in remote script.
+  ]]
+  {
+    name = "Gym",
+    static = "prompt_sandy_gym",
+    locations = {"sandy", "paleto"}
+  },
+  {
+    name = "Hornys",
+    static = "prompt_sandy_hornys",
+    locations = {"sandy"}
   }
 }
