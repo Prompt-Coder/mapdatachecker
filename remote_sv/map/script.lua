@@ -154,27 +154,6 @@ RegisterNetEvent(legacyEvents.final, function()
     -- nothing
 end)
 
--- Also register events for alias (so old mapdata with prompt_sandy_gym finds prompt_gym)
-local aliasId = mapAliases[MapId]
-if aliasId then
-    RegisterNetEvent(aliasId .. ":mapExists", function(cb)
-        cb(true)
-    end)
-    
-    RegisterNetEvent(aliasId .. ":mapFullNameSend", function(returnEvent, id)
-        local fullName = myName
-        TriggerEvent(returnEvent, fullName, id)
-    end)
-    
-    RegisterNetEvent(aliasId .. ":mapFinal", function()
-        -- nothing
-    end)
-    
-    if Debug == true then
-        print("^2[" .. MapId .. "] Also responding to alias: " .. aliasId .. "^7")
-    end
-end
-
 --[[
     LEGACY MAP SUPPORT END
 ]]
@@ -191,17 +170,6 @@ RegisterNetEvent(myLocationsEventName, function(cb)
     -- Return actual detected locations (or registry if not detected)
     cb(myActualLocations or myRegistryLocations or {"sandy"})
 end)
-
--- Also register these events for alias
-if aliasId then
-    RegisterNetEvent("promptmap:i_exist_" .. aliasId, function(existsCB)
-        existsCB(true)
-    end)
-    
-    RegisterNetEvent("promptmap:locations_" .. aliasId, function(cb)
-        cb(myActualLocations or myRegistryLocations or {"sandy"})
-    end)
-end
 
 -- check Installed Maps logic
 CreateThread(function()
