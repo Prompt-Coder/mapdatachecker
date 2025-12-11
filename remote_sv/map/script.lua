@@ -154,6 +154,14 @@ RegisterNetEvent(legacyEvents.final, function()
     -- nothing
 end)
 
+-- Also respond to alias :mapExists (so old mapdata with prompt_sandy_gym finds prompt_gym)
+local aliasId = mapAliases[MapId]
+if aliasId then
+    RegisterNetEvent(aliasId .. ":mapExists", function(cb)
+        cb(true)
+    end)
+end
+
 --[[
     LEGACY MAP SUPPORT END
 ]]
@@ -203,7 +211,21 @@ CreateThread(function()
         end
 
         if legacyExists == true then 
-            table.insert(existList, allMaps[i])
+            -- Skip if alias already in list (prevents double-counting gym as both prompt_gym and prompt_sandy_gym)
+            local alias = mapAliases[allMaps[i]]
+            local skipBecauseAliasExists = false
+            if alias then
+                for j = 1, #existList do
+                    if existList[j] == alias then
+                        skipBecauseAliasExists = true
+                        break
+                    end
+                end
+            end
+            
+            if not skipBecauseAliasExists then
+                table.insert(existList, allMaps[i])
+            end
         end
     end
 
