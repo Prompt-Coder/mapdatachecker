@@ -97,27 +97,32 @@ PerformHttpRequest(Urls.AllMapList, function(err, text, headers)
             end
             
             --[[
-                LEGACY EXCEPTION: Auto-detect paleto for old prompt_sandy_gym
-                Old sv_loader doesn't set DetectedLocations, but the map might have
-                both sandy and paleto folders. This auto-detects paleto folder.
+                LEGACY EXCEPTION: Auto-detect locations for gym maps
+                Old sv_loader uses local DetectedLocations (not visible to remote script).
+                We need to auto-detect which folders actually exist.
             ]]
-            if MapId == "prompt_sandy_gym" and DetectedLocations == nil then
+            if (MapId == "prompt_sandy_gym" or MapId == "prompt_gym") and DetectedLocations == nil then
                 local resourceName = GetCurrentResourceName()
+                local hasSandy = LoadResourceFile(resourceName, "stream/sandy/enabled.txt") or 
+                                 LoadResourceFile(resourceName, "stream/sandy/prompt_sandy_gym_placement.ymap")
                 local hasPaleto = LoadResourceFile(resourceName, "stream/paleto/enabled.txt")
                 
+                -- Build actual locations based on what folders exist
+                myActualLocations = {}
+                if hasSandy then
+                    table.insert(myActualLocations, "sandy")
+                end
                 if hasPaleto then
-                    -- Check if paleto not already in the list
-                    local paletoFound = false
-                    for _, loc in ipairs(myActualLocations) do
-                        if loc == "paleto" then paletoFound = true break end
-                    end
-                    
-                    if not paletoFound then
-                        table.insert(myActualLocations, "paleto")
-                        if Debug == true then
-                            print("^2[" .. resourceName .. "] Auto-detected paleto folder (legacy gym exception)^7")
-                        end
-                    end
+                    table.insert(myActualLocations, "paleto")
+                end
+                
+                -- Fallback to sandy if nothing detected
+                if #myActualLocations == 0 then
+                    myActualLocations = {"sandy"}
+                end
+                
+                if Debug == true then
+                    print("^2[" .. resourceName .. "] Auto-detected locations (legacy gym): " .. table.concat(myActualLocations, ", ") .. "^7")
                 end
             end
 
