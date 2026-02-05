@@ -3,6 +3,11 @@ return {
     SANDY SHORES MAPS (Single Location)
   ]]
   {
+    name = "Downtown",
+    static = "prompt_sandy_downtown",
+    locations = {"sandy"}
+  },
+  {
     name = "Firestation2",
     static = "prompt_sandy_fire2",
     locations = {"sandy"}
