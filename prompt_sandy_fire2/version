@@ -1,5 +1,6 @@
 1.0.2
  - Fire Station V2
+ - Removed LodLights that were palced on other maps
  - Lod Distance Increased
  - LOD Building color fixed
  - Small Fixes and Improvements
