@@ -1,4 +1,5 @@
-1.0.2
+1.0.3
  - Sandy Hospital V2
- - Multiple bug fixed
- - Added seating/laying positions
+ - floating LodLights Removed
+ - ox_lib zone for laying/seating props fixed
+ - syncroinization for laying/seating fixed
