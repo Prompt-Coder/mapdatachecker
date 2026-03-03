@@ -1,4 +1,3 @@
-1.0.3
+1.0.4
  - Sandy Apartments Update
- - Pool Props Cleared (so you can use the pool script)
- - Small Fixes with collision and ydrs
+ - Pool Size Improvements (added more constraints to what loads where)
