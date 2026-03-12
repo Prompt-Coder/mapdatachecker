@@ -1,4 +1,5 @@
-1.0.4
- - Decreased size from 99mb to 72mb
- - Fixed occasional audio streaming crash
- - Added the choice to choose the interaction button inside open_config.lua
+1.0.5
+ - Sandy Illegal Garage & Gas Station
+ - Added exports (getLiftState, isLiftBusy, setLiftState) and events (liftStateChanged, liftAnimationComplete)
+ - Added optional debug listeners (Config.Debug)
+ - Fixed extraZone button (downstairs floorgate) not tracking state and silently failing (NOW THE FLOORDOOR CAN BE CONTROLLED FROM BOTH SIDES)
