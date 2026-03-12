@@ -1,2 +1,4 @@
-1.1.0
- - Pool Size 400 Crash caused by NVE fixed
+1.1.1
+ - Sandy Mechanic
+ - Added exports (getLiftState, isLiftBusy, setLiftState) and events (liftStateChanged, liftAnimationComplete)
+ - Added optional debug listeners (Config.Debug)
