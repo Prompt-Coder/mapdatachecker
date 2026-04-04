@@ -1,4 +1,6 @@
-1.1.1
+1.2.0
  - Sandy Mechanic
- - Added exports (getLiftState, isLiftBusy, setLiftState) and events (liftStateChanged, liftAnimationComplete)
- - Added optional debug listeners (Config.Debug)
+ - Added Auto-open support for animated doors
+ - Added job restrictions support per framework + standalone
+ - Added qb_target support
+ - Read more in our discord channel in #updates
