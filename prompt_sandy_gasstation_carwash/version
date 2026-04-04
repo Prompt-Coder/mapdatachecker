@@ -1,5 +1,6 @@
-1.0.5
+1.1.0
  - Sandy Illegal Garage & Gas Station
- - Added exports (getLiftState, isLiftBusy, setLiftState) and events (liftStateChanged, liftAnimationComplete)
- - Added optional debug listeners (Config.Debug)
- - Fixed extraZone button (downstairs floorgate) not tracking state and silently failing (NOW THE FLOORDOOR CAN BE CONTROLLED FROM BOTH SIDES)
+ - Added Auto-open support for animated doors
+ - Added job restrictions support per framework + standalone
+ - Added qb_target support
+ - Read more in our discord channel in #updates
