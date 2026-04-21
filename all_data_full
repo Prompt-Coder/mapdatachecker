@@ -3,6 +3,11 @@ return {
     SANDY SHORES MAPS (Single Location)
   ]]
   {
+    name = "Roads",
+    static = "prompt_sandy_roads",
+    locations = {"sandy"}
+  },
+  {
     name = "Downtown",
     static = "prompt_sandy_downtown",
     locations = {"sandy"}
