@@ -1,6 +1,2 @@
-1.2.1
- - Sandy Mechanic
- - Added Auto-open support for animated doors
- - Added job restrictions support per framework + standalone
- - Added qb_target support
- - Read more in our discord channel in #updates
+1.2.2
+ - small collision fixed in the boss window
