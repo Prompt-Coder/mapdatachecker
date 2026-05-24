@@ -8,6 +8,11 @@ return {
     locations = {"sandy"}
   },
   {
+    name = "Flywheels",
+    static = "darkvanar_flywheel",
+    locations = {"sandy"}
+  },
+  {
     name = "Downtown",
     static = "prompt_sandy_downtown",
     locations = {"sandy"}
