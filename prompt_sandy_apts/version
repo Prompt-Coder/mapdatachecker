@@ -1,3 +1,4 @@
-1.0.4
- - Sandy Apartments Update
- - Pool Size Improvements (added more constraints to what loads where)
+1.0.5
+ Sandy Apartments Update
+ Small collision fixes in elevator
+ Fixed wrong 301 apartment sign
