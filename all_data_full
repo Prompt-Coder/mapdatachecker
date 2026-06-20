@@ -147,6 +147,11 @@ return {
     PALETO BAY MAPS (Single Location)
   ]]
   {
+    name = "Train",
+    static = "prompt_trainstation_paleto",
+    locations = {"paleto"}
+  },
+  {
     name = "Firestation",
     static = "paleto_bay_fire_station",
     locations = {"paleto"}
