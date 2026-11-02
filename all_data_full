@@ -173,6 +173,17 @@ return {
   },
 
   --[[
+    GRAPESEED MAPS (Single Location)
+    No Grapeseed mapdata yet: the remote script skips this location
+    until "grapeseed" is added to its location lists.
+  ]]
+  {
+    name = "Firestation",
+    static = "prompt_grapeseed_firestation",
+    locations = {"grapeseed"}
+  },
+
+  --[[
     MULTI-LOCATION MAPS (Sandy + Paleto)
     These maps have both sandy and paleto folders.
     The sv_loader detects which folders are present.
